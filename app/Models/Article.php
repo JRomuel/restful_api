@@ -38,6 +38,10 @@ class Article extends Model
     {
         return (string) $this->slug;
     }
+    public function body(): string
+    {
+        return (string) $this->body;
+    }
 
     public function author_id(): string
     {

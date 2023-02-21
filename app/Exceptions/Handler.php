@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,8 +42,18 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function(NotFoundHttpException $e, $request){
+            if($request->is('api/*')){
+                return response()->json([
+                    'error' => [
+                        'message'   => 'Resource Not Found',
+                        'type'      => 'NotFoundHttpException',
+                        'code'      => '4045',
+                        'link'      => 'https://www.matthewedgar.net/find-and-fix-404-errors/',
+                        'status_code'   => (string)$e->getStatusCode()
+                    ],
+                ], 404);
+            }
         });
     }
 }
